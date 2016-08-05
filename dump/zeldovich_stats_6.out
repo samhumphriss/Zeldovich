@@ -1,0 +1,173 @@
+
+All Numpy errors are currently suppressed.
+
+Generator seed =  3966559 
+
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+uh oh cell out of bounds
+
+------------------------------------------------------------
+Sender: LSF System <hpcadmin@m4248>
+Subject: Job 736359[6]: <zeldovich_stats[1-10]> Done
+
+Job <zeldovich_stats[1-10]> was submitted from host <cosma-e> by user <rhgk18> in cluster <cosma-p_cluster1>.
+Job was executed on host(s) <m4248>, in queue <cordelia>, as user <rhgk18> in cluster <cosma-p_cluster1>.
+</cosma/home/durham/rhgk18> was used as the home directory.
+</cosma/home/durham/rhgk18/ls_structure> was used as the working directory.
+Started at Fri Aug  5 13:51:36 2016
+Results reported at Fri Aug  5 13:51:42 2016
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/bash -l
+#BSUB -L /bin/bash
+#BSUB -q cordelia
+#BSUB -n 1 #Number of processors
+#BSUB -J zeldovich_stats[1-10] #Job name
+#BSUB -eo ./dump/zeldovich_stats_%I.err #Error outputs
+#BSUB -oo ./dump/zeldovich_stats_%I.out #Program outputs
+#BSUB -P durham
+#BSUB "ptile[hosts=1]" #Processors per node
+#BSUB -W 00:10 #Wall clock time
+
+. /etc/profile.d/modules.sh
+module purge
+module load python/2.7.3
+
+python exeMAIN.py -b 512 -g 128 -r -f "/B512_G128_002" --runindex ${LSB_JOBINDEX}
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time   :      5.16 sec.
+    Max Memory :         1 MB
+    Max Swap   :        33 MB
+
+    Max Processes  :         1
+    Max Threads    :         1
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file <./dump/zeldovich_stats_6.err> for stderr output of this job.
+

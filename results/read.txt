@@ -1,0 +1,2 @@
+Results folder: 
+Aims to provide a location to store images and comparison data for perhaps non-essential results (all of which will be stored on /gpfs

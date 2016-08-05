@@ -14,7 +14,7 @@ def xi2d_fromfile(folder, seed):
     xi2d = np.loadtxt(folder+"/xi2d_SEED_"+str(seed)+".txt")
 
     plt.figure()
-    plt.plot(rp, pi, np.arcsinh(300*xi2d), cmap = 'magma')
+    plt.pcolormesh(rp, pi, np.arcsinh(300*xi2d), cmap = 'magma')
     plt.axes().set_aspect('equal')
     plt.show()
 

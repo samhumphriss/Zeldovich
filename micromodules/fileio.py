@@ -25,6 +25,10 @@ def write_xi2d(loc, xi2d, seed):
     if not os.path.exists(fileloc):
         np.savetxt(fileloc, xi2d)
 
+def import_seedbank(filename):
+    seed_path = os.getcwd() + "/seeds/" + filename  
+    return np.loadtxt(seed_path)
+
 
 #---------------------------------------------------
 #Unnecessary, identical code to np.loadtxt()
