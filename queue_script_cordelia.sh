@@ -13,4 +13,4 @@
 module purge
 module load python/2.7.3
 
-python exeMAIN.py -b 512 -g 128 -r -f "/B512_G128_002" --runindex ${LSB_JOBINDEX}
+python exeMAIN.py -b 512 -g 128 -r -f "/B512_G128_003/bao" -p "wig.txt" --runindex ${LSB_JOBINDEX}
