@@ -3,7 +3,7 @@ import numpy as np
 
 def mkdir(f):
     if not os.path.exists(f):
-        os.mkdir(f)
+        os.makedirs(f)
 
 def import_pk(filename):
 

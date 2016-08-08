@@ -3,7 +3,9 @@ import argparse
 import numpy as np
 import cic_dens_wrapper as cdw
 import spatial_stats as ss
-import fileio as io
+import micromodules.fileio as io
+
+#EDIT Notes: seedbank support, 
 
 print "\nAll Numpy errors are currently suppressed."
 
@@ -16,19 +18,21 @@ parser.add_argument("-z", "--redshift", type=float, default = 0.0, help='Set the
 parser.add_argument("-r", "--truerand", action='store_true', help='Generates a random seed each time the code is run')
 parser.add_argument("-n", "--nparticles", type=int, default = 30, help='Set the depth of field on the 2D cross-sections.')
 parser.add_argument("-f", "--folder", type=str, default = "/BX_GX_ZX_000", help='Give the name of the output folder.')
+parser.add_argument("--runindex", type=int, default = -1, help='Should be set to ${LSB_JOBINDEX} if used.')
 args = parser.parse_args()
 
 base_folder = "/gpfs/data/rhgk18/results"
 sv_folder = base_folder+args.folder
 io.mkdir(sv_folder)
 
-pk = io.import_pk("pk_indra7313.txt")
+pk = io.import_pk(args.pkpath)
 
 if args.truerand == False:
     genseed=314159
     print "\nGenerator seed = ", genseed, "\n"
 else:
-    genseed=int(1000000*np.random.rand())
+    seedbank = io.import_seedbank('seedbank20k.txt')
+    genseed  = int(seedbank[args.runindex])
     print "\nGenerator seed = ", genseed, "\n"
 
 

@@ -1,2 +1,0 @@
-/cosma/home/durham/rhgk18/ls_structure/spatial_stats.py:97: ComplexWarning: Casting complex values to real discards the imaginary part
-  dk2=(deltak*N.conjugate(deltak)).astype(N.float)

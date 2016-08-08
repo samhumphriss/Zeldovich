@@ -27,7 +27,7 @@ sv_folder = base_folder+args.folder
 io.mkdir(sv_folder)
 
 pk = io.import_pk(args.pkpath)
-s
+
 if args.truerand == False:
     genseed=314159
     print "\nGenerator seed = ", genseed, "\n"
