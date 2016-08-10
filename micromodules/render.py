@@ -3,6 +3,8 @@ from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from matplotlib.colors import LogNorm
 from itertools import product, combinations
+import glob
+import os
 import numpy as np
 import spatial_stats as ss
 
@@ -18,6 +20,21 @@ def xi2d_fromfile(folder, seed):
     plt.axes().set_aspect('equal')
     plt.show()
 
+def ximean(r, xiarray):
+    subset = np.random.permutation(xiarray)
+    subset = subset[0:10]
+
+    fig0 = plt.figure()
+
+    for sub in subset:
+        plt.plot(r, r**2*sub, alpha = 0.15)
+
+    ximean = np.mean(xiarray, axis = 0)
+    xistderr = np.std(xiarray, axis = 0)/np.sqrt(len(ximean))     
+
+    plt.errorbar(r, r**2*ximean, yerr=r**2*xistderr, color='k')
+    plt.xlabel("$R$ /Mpc")
+    plt.ylabel("$R^2\\xi(R)$")
 
 def pk_render(pk):
     plt.figure()

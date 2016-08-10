@@ -22,9 +22,7 @@ parser.add_argument("-f", "--folder", type=str, default = "/BX_GX_ZX_000", help=
 parser.add_argument("--runindex", type=int, default = -1, help='Should be set to ${LSB_JOBINDEX} if used.')
 args = parser.parse_args()
 
-base_folder = "/gpfs/data/rhgk18/results"
-sv_folder = base_folder+args.folder
-io.mkdir(sv_folder)
+sv_folder = args.folder
 
 pk = io.import_pk(args.pkpath)
 
@@ -36,14 +34,13 @@ else:
     genseed  = int(seedbank[args.runindex])
     print "\nGenerator seed = ", genseed, "\n"
 
-dens = exe.run_dens(pk, args.redshift, args.boxsize, args.ngrid, args.truerand, genseed)
+dens = exe.run_dens(pk, args.redshift, args.boxsize, args.ngrid, args.truerand, seed=genseed)
 
-#r, xi=ss.getXi(densz, nrbins=args.ngrid/2, boxsize=args.boxsize, get2d=False, deconvolve_cic=True, exp_smooth=0.0)
+r, xi=ss.getXi(dens, nrbins=args.ngrid/2, boxsize=args.boxsize, get2d=False, deconvolve_cic=True, exp_smooth=0.0)
 
-rp, pi, xi2d=ss.getXi(dens, nrbins=args.ngrid/2, boxsize=args.boxsize, get2d=True, deconvolve_cic=True, exp_smooth=0.0)
+#rp, pi xi2d =ss.getXi(dens, nrbins=args.ngrid/2, boxsize=args.boxsize, get2d=True, deconvolve_cic=True, exp_smooth=0.0)
 
-io.write_rp(sv_folder,rp)
-io.write_pi(sv_folder,pi)
-io.write_xi2d(sv_folder, xi2d, genseed)
+io.write_r(sv_folder, r)
+io.write_xi(sv_folder, xi, genseed)
     
     
