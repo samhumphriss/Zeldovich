@@ -4,7 +4,7 @@ import numpy as np
 import glob
 import os
 
-folder = "/gpfs/data/rhgk18/results/trial_5/nobao"
+folder = "/gpfs/data/rhgk18/results/trial_z03/bao"
 search = "xi2d_*"
 
 results = glob.glob(os.path.join(folder, search))

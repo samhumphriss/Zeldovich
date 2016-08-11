@@ -190,7 +190,7 @@ def redshift_dist(pos0, redshift, z_disp):
     
     d1=growthfunc(1./(1+redshift))/growthfunc(1.)
     
-    z += z_disp.flatten()*0.5*d1
+    z += z_disp.flatten()*0.3*d1
      
     return pos0[0], pos0[1], z
 
