@@ -29,7 +29,7 @@ def xi2d_slices(rp, pi, xi2d):
     xi2d = xi2d[0:rp_ind[0].max()+1, 0:rp_ind[0].max()+1]
 
     fig0 = plt.figure()
-    ax1 = fig0.add_subplot(221)
+    ax1 = fig0.add_subplot(221, aspect='equal')
     ax1.pcolormesh(rp, pi, np.arcsinh(300*xi2d), cmap = 'magma')
     ax1.axis([3,200,3,200])
     ax1.set_title("2D Correlation Plot")

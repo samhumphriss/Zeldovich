@@ -4,7 +4,7 @@ import numpy as np
 import glob
 import os
 
-folder = "/gpfs/data/rhgk18/results/trial_3/bao"
+folder = "/gpfs/data/rhgk18/results/trial_5/nobao"
 search = "xi2d_*"
 
 results = glob.glob(os.path.join(folder, search))
@@ -17,9 +17,8 @@ for r in results:
 
 xi2d_mean = a/c
 
-
-
 rp = np.loadtxt(folder+"/rp.txt")
 pi = np.loadtxt(folder+"/pi.txt")
+#xi2d = np.loadtxt(results[0])
 
 rd.xi2d_slices(rp, pi, xi2d_mean)
