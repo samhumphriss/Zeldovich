@@ -39,7 +39,7 @@ def import_pk(filename):
     pk_path = os.getcwd() + "/pks/" + filename  
     return np.loadtxt(pk_path)
 
-def import_fromfolder(folder, search):
+def importxi_fromfolder(folder, search):
     search_results = glob.glob(os.path.join(folder, search))
 
     dtest = np.loadtxt(search_results[0])
@@ -50,6 +50,21 @@ def import_fromfolder(folder, search):
         data[index] = np.loadtxt(search_results[index])
 
     return data
+
+def importxi2d_fromfolder(folder, search):
+    search_results = glob.glob(os.path.join(folder, search))
+
+    dtest = np.loadtxt(search_results[0])
+
+    data = np.zeros((len(search_results),len(dtest)))
+
+    for index in range(len(search_results)):
+        data[index] = np.loadtxt(search_results[index])
+
+    return data
+
+
+
 
 
 #---------------------------------------------------

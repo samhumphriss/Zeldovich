@@ -20,21 +20,56 @@ def xi2d_fromfile(folder, seed):
     plt.axes().set_aspect('equal')
     plt.show()
 
+def xi2d_slices(rp, pi, xi2d):
+    
+    #Prunes data above rp = 200 Mpc
+    rp_ind = np.where(rp<201.0)
+    rp = rp[rp_ind]
+    pi = pi[rp_ind]
+    xi2d = xi2d[0:rp_ind[0].max()+1, 0:rp_ind[0].max()+1]
+
+    fig0 = plt.figure()
+    ax1 = fig0.add_subplot(221)
+    ax1.pcolormesh(rp, pi, np.arcsinh(300*xi2d), cmap = 'magma')
+    ax1.axis([3,200,3,200])
+    ax1.set_title("2D Correlation Plot")
+    ax1.set_xlabel("$R_p$ /Mpc")
+    ax1.set_ylabel("$\\Pi$ /Mpc")
+
+    ax2 = fig0.add_subplot(223)
+    ax2.plot(rp, rp**2*xi2d[:,0])
+    ax2.set_xlabel("$\\Pi$ /Mpc")
+    ax2.set_ylabel("$R^2\\xi(R)$")
+    ax2.set_title("Line-of-sight")   
+
+    ax3 = fig0.add_subplot(224)
+    ax3.plot(pi, pi**2*xi2d[0,:])
+    ax3.set_xlabel("$R_p$ /Mpc")
+    ax3.set_ylabel("$R^2\\xi(R)$")
+    ax3.set_title("Tranverse")
+
+    plt.show()
+
+
+
 def ximean(r, xiarray):
     subset = np.random.permutation(xiarray)
     subset = subset[0:10]
 
     fig0 = plt.figure()
 
+    r_ind = np.where(r<=200.0)
+
     for sub in subset:
-        plt.plot(r, r**2*sub, alpha = 0.15)
-
+        plt.plot(r[r_ind], r[r_ind]**2*sub[r_ind], alpha = 0.5)
+         
     ximean = np.mean(xiarray, axis = 0)
-    xistderr = np.std(xiarray, axis = 0)/np.sqrt(len(ximean))     
+    xistderr = np.std(xiarray, axis = 0)   
 
-    plt.errorbar(r, r**2*ximean, yerr=r**2*xistderr, color='k')
+    plt.errorbar(r[r_ind], r[r_ind]**2*ximean[r_ind], yerr=r[r_ind]**2*xistderr[r_ind], color='k')
     plt.xlabel("$R$ /Mpc")
     plt.ylabel("$R^2\\xi(R)$")
+    plt.show()
 
 def pk_render(pk):
     plt.figure()

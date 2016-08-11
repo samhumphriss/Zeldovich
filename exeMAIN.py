@@ -36,11 +36,16 @@ else:
 
 dens = exe.run_dens(pk, args.redshift, args.boxsize, args.ngrid, args.truerand, seed=genseed)
 
-r, xi=ss.getXi(dens, nrbins=args.ngrid/2, boxsize=args.boxsize, get2d=False, deconvolve_cic=True, exp_smooth=0.0)
-
-#rp, pi xi2d =ss.getXi(dens, nrbins=args.ngrid/2, boxsize=args.boxsize, get2d=True, deconvolve_cic=True, exp_smooth=0.0)
+r, xi = ss.getXi(dens,nrbins=args.ngrid/2, boxsize=args.boxsize, get2d = False, deconvolve_cic = True, exp_smooth = 0.0)
 
 io.write_r(sv_folder, r)
 io.write_xi(sv_folder, xi, genseed)
+
+
+rp, pi, xi2d = ss.getXi(dens, nrbins = args.ngrid/2, boxsize = args.boxsize, get2d = True, deconvolve_cic = True, exp_smooth = 0.0)
+
+io.write_rp(sv_folder, rp)
+io.write_pi(sv_folder, pi)
+io.write_xi2d(sv_folder, xi2d, genseed)
     
     
