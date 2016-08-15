@@ -9,6 +9,8 @@
 #BSUB -R "span[hosts=1]" #Processors per node
 #BSUB -W 02:00 #Wall clock time
 
+ulimit -c 0
+
 folderloc="/gpfs/data/rhgk18/results/trial_5"
 
 mkdir $folderloc
