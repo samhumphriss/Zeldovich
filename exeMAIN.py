@@ -17,9 +17,9 @@ parser.add_argument("-g", "--ngrid", type=int, default = 64, help='Define how ma
 parser.add_argument("-p", "--pkpath", type=str, default = "pk_indra7313.txt", help='Passes the name rof the P(k) file used to the code')
 parser.add_argument("-z", "--redshift", type=float, default = 0.0, help='Set the initial time step in units of redshift')
 parser.add_argument("-r", "--truerand", action='store_true', help='Generates a random seed each time the code is run')
-parser.add_argument("-n", "--nparticles", type=int, default = 30, help='Set the depth of field on the 2D cross-sections.')
 parser.add_argument("-f", "--folder", type=str, default = "/BX_GX_ZX_000", help='Give the name of the output folder.')
 parser.add_argument("--runindex", type=int, default = -1, help='Should be set to ${LSB_JOBINDEX} if used.')
+parser.add_argument("--np", "--nparticles" type=int, default = 128**3, help='Gives the total number of particles within the volume.')
 args = parser.parse_args()
 
 sv_folder = args.folder
@@ -34,7 +34,7 @@ else:
     genseed  = int(seedbank[args.runindex])
     print "\nGenerator seed = ", genseed, "\n"
 
-dens = exe.run_dens(pk, redshift=args.redshift, growthrate=0.5, boxsize=args.boxsize, ngrid=args.ngrid, trand=args.truerand, seed=genseed)
+dens = exe.run_dens(pk, redshift=args.redshift, growthrate=0.5, boxsize=args.boxsize, ngrid=args.ngrid, nparticles=args.npartcles, trand=args.truerand, seed=genseed)
 
 r, xi = ss.getXi(dens,nrbins=args.ngrid/2, boxsize=args.boxsize, get2d = False, deconvolve_cic = True, exp_smooth = 0.0)
 
