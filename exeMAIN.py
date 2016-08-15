@@ -34,7 +34,7 @@ else:
     genseed  = int(seedbank[args.runindex])
     print "\nGenerator seed = ", genseed, "\n"
 
-dens = exe.run_dens(pk, args.redshift, args.boxsize, args.ngrid, args.truerand, seed=genseed)
+dens = exe.run_dens(pk, redshift=args.redshift, growthrate=0.5, boxsize=args.boxsize, ngrid=args.ngrid, trand=args.truerand, seed=genseed)
 
 r, xi = ss.getXi(dens,nrbins=args.ngrid/2, boxsize=args.boxsize, get2d = False, deconvolve_cic = True, exp_smooth = 0.0)
 

@@ -26,7 +26,23 @@ def get_dens(x, y, z, ngrid, boxsize):
     dens=dens/N.mean(dens)-1.0
     
     return dens
+
+#Input: displacement field on the grid in 3 arrays (xp, yp, zp)
+#Each of xp, yp, and zp must be double precision arrays
+#We also need the size of the grid to make (density grid will be ngrid x ngrid x ngrid) and the box size
+#This code assumes the particles are initially on a grid, and it displaces them and computes the final density field all in one go
+#If nparticles != ngrid**3, it interpolates the displacement field to the off-grid particles
+#Also does redshift space distortions through the "growthrate" parameter, and it assumes the line of sight direction is the x-direction
+def disp_to_dens(xp, yp, zp, ngrid, boxsize, nparticles, growthrate):
+    #Just make sure that these are the right data type
+    xp=xp.astype(N.float)
+    yp=yp.astype(N.float)
+    zp=zp.astype(N.float)
+
+    #Initialize the density grid
+    dens=N.zeros([ngrid, ngrid, ngrid], dtype=N.float)
+
+    cicdens.calcd_zel(N.int(ngrid), N.int64(nparticles), N.float(boxsize), N.float(growthrate), N.int64(xp.ctypes.data), N.int64(yp.ctypes.data), N.int64(zp.ctypes.data), N.int64(dens.ctypes.data))
     
-    
-    
-    
+    dens=dens/N.mean(dens)-1.0
+    return dens
