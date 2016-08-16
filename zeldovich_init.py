@@ -20,11 +20,8 @@ def main(redshift, pkinit, boxsize=100.0, ngrid=30, exactpk=True, trand=False, s
 #    print "Calculating the final particle positions"
     x, y, z=get_pos(fx, fy, fz, redshift, boxsize=boxsize, ngrid=ngrid)
 
-#    print "Z-Shifting"
-    xs, ys, zs=redshift_dist((x,y,z), redshift, fz)
-
 #    print "Returning main()"
-    return x, y, z, zs, seed
+    return x, y, z
     
     
 
@@ -43,13 +40,15 @@ def make_gauss_init(pkinit, boxsize=100.0, ngrid=30, seed=314159, exactpk=True, 
     #No clue. it represents the grid, but the method / definition is non-trivial.
     a = np.fromfunction(lambda x,y,z:x, sk).astype(np.float)
     a[np.where(a > ngrid/2)] -= ngrid
-    b=N.transpose(a, (1, 0, 2))
+    b=np.transpose(a, (1, 0, 2))
     c = np.fromfunction(lambda x,y,z:z, sk).astype(np.float)
     c[np.where(c > ngrid/2)] -= ngrid
     
     #From this, a/b/c = x/y/z but why are 3x10x10x6 arrays necessary?
     kgrid = kmin*np.sqrt(a**2+b**2+c**2).astype(np.float)
-    a,b,c = 0
+    a = 0
+    b = 0
+    c = 0
     #K-space is a bitch.
     
     
@@ -85,7 +84,7 @@ def make_gauss_init(pkinit, boxsize=100.0, ngrid=30, seed=314159, exactpk=True, 
         dk *= np.sqrt(filt*pkinterp(kgrid.flatten())).reshape(sk)*ngrid**3/boxsize**1.5
         
     dk=nyquist(dk)
-    return dens
+    return dk
     
 def get_disp(dens, boxsize=512.0, ngrid=512):
     
@@ -98,13 +97,13 @@ def get_disp(dens, boxsize=512.0, ngrid=512):
     #Hello darkness, my old friend. (Same k-space issues)
     a = np.fromfunction(lambda x,y,z:x, sk).astype(np.float)
     a[np.where(a > ngrid/2)] -= ngrid
-    b=N.transpose(a, (1, 0, 2))
+    b=np.transpose(a, (1, 0, 2))
     c = np.fromfunction(lambda x,y,z:z, sk).astype(np.float)
     c[np.where(c > ngrid/2)] -= ngrid
   
-    xp=-1j*dk0*a/(a**2+b**2+c**2)/kmin
-    yp=-1j*dk0*b/(a**2+b**2+c**2)/kmin
-    zp=-1j*dk0*c/(a**2+b**2+c**2)/kmin
+    xp=-1j*dens*a/(a**2+b**2+c**2)/kmin
+    yp=-1j*dens*b/(a**2+b**2+c**2)/kmin
+    zp=-1j*dens*c/(a**2+b**2+c**2)/kmin
     
     xp[0,0,0]=0.
     yp[0,0,0]=0.
@@ -118,9 +117,9 @@ def get_disp(dens, boxsize=512.0, ngrid=512):
     yp = nyquist(yp)
     zp = nyquist(zp)
     
-    xp=N.fft.irfftn(xp)
-    yp=N.fft.irfftn(yp)
-    zp=N.fft.irfftn(zp)
+    xp=np.fft.irfftn(xp)
+    yp=np.fft.irfftn(yp)
+    zp=np.fft.irfftn(zp)
     
     return xp, yp, zp
     

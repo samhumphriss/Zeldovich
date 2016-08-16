@@ -114,9 +114,11 @@ static PyObject *cicdens_calcd_zel(PyObject *self, PyObject *args)
 			if (cell[j] == ngrid)
 				cell[j]=0;
 			if (neighbor[j] >= ngrid || neighbor[j] < 0)
-				printf("1: uh oh out of bounds\n");
+                ;
+				//printf("1: uh oh out of bounds\n");
 			if (cell[j] >=ngrid || cell[j] < 0)
-				printf("2: uh oh cell out of bounds\n");
+                ;
+				//printf("2: uh oh cell out of bounds\n");
 			
 		}
 		
@@ -165,9 +167,11 @@ static PyObject *cicdens_calcd_zel(PyObject *self, PyObject *args)
 			if (cell[j] == ngrid)
 				cell[j]=0;
 			if (neighbor[j] >= ngrid || neighbor[j] < 0)
-				printf("3: uh oh out of bounds\n");
+                ;
+				//printf("3: uh oh out of bounds\n");
 			if (cell[j] >=ngrid || cell[j] < 0)
-				printf("4: uh oh cell out of bounds\n");
+                ;
+				//printf("4: uh oh cell out of bounds\n");
 				
 				
 		}

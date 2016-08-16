@@ -1,12 +1,10 @@
 import zeldovich_init as ic
 import argparse
 import numpy as np
-import cic_dens_wrapper as cdw
 import spatial_stats as ss
 import micromodules.fileio as io
 import execute as exe
-
-#EDIT Notes: seedbank support, 
+import sys
 
 print "\nAll Numpy errors are currently suppressed."
 
@@ -19,7 +17,7 @@ parser.add_argument("-z", "--redshift", type=float, default = 0.0, help='Set the
 parser.add_argument("-r", "--truerand", action='store_true', help='Generates a random seed each time the code is run')
 parser.add_argument("-f", "--folder", type=str, default = "/BX_GX_ZX_000", help='Give the name of the output folder.')
 parser.add_argument("--runindex", type=int, default = -1, help='Should be set to ${LSB_JOBINDEX} if used.')
-parser.add_argument("--np", "--nparticles" type=int, default = 128**3, help='Gives the total number of particles within the volume.')
+parser.add_argument("-np", "--nparticles", type=int, default = 128, help='Gives the total number of particles within the volume.')
 args = parser.parse_args()
 
 sv_folder = args.folder
@@ -37,7 +35,9 @@ else:
     print "\nGenerator seed = ", genseed, "\n"
 
 print "Calculating the resulting density grid..."
-dens = exe.run_dens(pk, redshift=args.redshift, growthrate=0.5, boxsize=args.boxsize, ngrid=args.ngrid, nparticles=args.npartcles, trand=args.truerand, seed=genseed)
+dens = exe.run_dens(pk, redshift=args.redshift, growthrate=0.5, boxsize=args.boxsize, ngrid=args.ngrid, nparticles=args.nparticles**3, trand=args.truerand, seed=genseed)
+
+sys.exit("Debug End")
 
 print "Calculating the 1D-averaged correlation function..."
 r, xi = ss.getXi(dens,nrbins=args.ngrid/2, boxsize=args.boxsize, get2d = False, deconvolve_cic = True, exp_smooth = 0.0)
