@@ -43,14 +43,13 @@ def make_gauss_init(pkinit, boxsize=100.0, ngrid=30, seed=314159, exactpk=True, 
     #No clue. it represents the grid, but the method / definition is non-trivial.
     a = np.fromfunction(lambda x,y,z:x, sk).astype(np.float)
     a[np.where(a > ngrid/2)] -= ngrid
-    b = np.fromfunction(lambda x,y,z:y, sk).astype(np.float)
-    b[np.where(b > ngrid/2)] -= ngrid
+    b=N.transpose(a, (1, 0, 2))
     c = np.fromfunction(lambda x,y,z:z, sk).astype(np.float)
     c[np.where(c > ngrid/2)] -= ngrid
     
     #From this, a/b/c = x/y/z but why are 3x10x10x6 arrays necessary?
     kgrid = kmin*np.sqrt(a**2+b**2+c**2).astype(np.float)
-    
+    a,b,c = 0
     #K-space is a bitch.
     
     
@@ -85,9 +84,7 @@ def make_gauss_init(pkinit, boxsize=100.0, ngrid=30, seed=314159, exactpk=True, 
     else:
         dk *= np.sqrt(filt*pkinterp(kgrid.flatten())).reshape(sk)*ngrid**3/boxsize**1.5
         
-    #Convert back from k-space to xyz-space
     dk=nyquist(dk)
-    dens = np.fft.irfftn(dk)
     return dens
     
 def get_disp(dens, boxsize=512.0, ngrid=512):
@@ -95,51 +92,37 @@ def get_disp(dens, boxsize=512.0, ngrid=512):
     cell_len=np.float(boxsize)/np.float(ngrid)
     thirdim=ngrid/2+1
     kmin = 2*np.pi/np.float(boxsize)
-    dens = np.fft.rfftn(dens)
     sk = (ngrid,ngrid,thirdim)  
 
 
     #Hello darkness, my old friend. (Same k-space issues)
     a = np.fromfunction(lambda x,y,z:x, sk).astype(np.float)
     a[np.where(a > ngrid/2)] -= ngrid
-    b = np.fromfunction(lambda x,y,z:y, sk).astype(np.float)
-    b[np.where(b > ngrid/2)] -= ngrid
+    b=N.transpose(a, (1, 0, 2))
     c = np.fromfunction(lambda x,y,z:z, sk).astype(np.float)
     c[np.where(c > ngrid/2)] -= ngrid
-
+  
+    xp=-1j*dk0*a/(a**2+b**2+c**2)/kmin
+    yp=-1j*dk0*b/(a**2+b**2+c**2)/kmin
+    zp=-1j*dk0*c/(a**2+b**2+c**2)/kmin
     
-    #initialise empty displacement arrays
-    xp=np.zeros(sk, dtype=np.complex)
-    yp=np.zeros(sk, dtype=np.complex)
-    zp=np.zeros(sk, dtype=np.complex)
-
-    #eww. again?
-    kgrid = kmin*np.sqrt(a**2+b**2+c**2).astype(np.float)
-
-
-    #Mathematics of this? Complex forces in fourier k-space? No thank you. Not yet.
-    xp.real =-kmin*a*(dens.imag)/(kgrid**2)
-    xp.imag=kmin*a*(dens.real)/(kgrid**2)
     xp[0,0,0]=0.
-    
-    yp.real =-kmin*b*(dens.imag)/(kgrid**2)
-    yp.imag=kmin*b*(dens.real)/(kgrid**2)
     yp[0,0,0]=0.
-    
-    zp.real =-kmin*c*(dens.imag)/(kgrid**2)
-    zp.imag=kmin*c*(dens.real)/(kgrid**2)
     zp[0,0,0]=0.
     
-    #You are now leaving k-space. Have a nice day.
+    a=0
+    b=0
+    c=0
+    
     xp = nyquist(xp)
     yp = nyquist(yp)
     zp = nyquist(zp)
     
-    xp=np.fft.irfftn(xp)
-    yp=np.fft.irfftn(yp)
-    zp=np.fft.irfftn(zp)
-
-    return xp, yp, zp   
+    xp=N.fft.irfftn(xp)
+    yp=N.fft.irfftn(yp)
+    zp=N.fft.irfftn(zp)
+    
+    return xp, yp, zp
     
 
 #Returns the updated positions of all of the particles.
