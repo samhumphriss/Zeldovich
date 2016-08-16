@@ -20,4 +20,4 @@ mkdir "$folderloc/nobao"
 module purge
 module load python/2.7.3
 
-python exeMAIN.py -b 1024 -g 512 -r -f "$folderloc/nobao" -p "nowig.txt" --runindex ${LSB_JOBINDEX}
+python exeMAIN.py -b 512 -g 256 -np 128**3 -r -f "$folderloc/nobao" -p "nowig.txt" --runindex ${LSB_JOBINDEX}

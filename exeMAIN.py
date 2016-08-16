@@ -24,8 +24,10 @@ args = parser.parse_args()
 
 sv_folder = args.folder
 
+print "Importing pk: ", args.pkpath
 pk = io.import_pk(args.pkpath)
 
+print "Importing seed..."
 if args.truerand == False:
     genseed=314159
     print "\nGenerator seed = ", genseed, "\n"
@@ -34,16 +36,20 @@ else:
     genseed  = int(seedbank[args.runindex])
     print "\nGenerator seed = ", genseed, "\n"
 
+print "Calculating the resulting density grid..."
 dens = exe.run_dens(pk, redshift=args.redshift, growthrate=0.5, boxsize=args.boxsize, ngrid=args.ngrid, nparticles=args.npartcles, trand=args.truerand, seed=genseed)
 
+print "Calculating the 1D-averaged correlation function..."
 r, xi = ss.getXi(dens,nrbins=args.ngrid/2, boxsize=args.boxsize, get2d = False, deconvolve_cic = True, exp_smooth = 0.0)
 
+print "Writing xi to ", sv_folder
 io.write_r(sv_folder, r)
 io.write_xi(sv_folder, xi, genseed)
 
-
+print "Calculating the 2D correlation function..."
 rp, pi, xi2d = ss.getXi(dens, nrbins = args.ngrid/2, boxsize = args.boxsize, get2d = True, deconvolve_cic = True, exp_smooth = 0.0)
 
+print "Writing xi2d to ", sv_folder
 io.write_rp(sv_folder, rp)
 io.write_pi(sv_folder, pi)
 io.write_xi2d(sv_folder, xi2d, genseed)
