@@ -6,25 +6,6 @@ from numpy.random import seed as NumSeed
 
 np.seterr(all='ignore')
 
-def main(redshift, pkinit, boxsize=100.0, ngrid=30, exactpk=True, trand=False, seed=314159):
-#    print "Running main()"
-#    tm = time.time()
-
-#    print "Beginning initialisation of the Gaussian distortion field"
-    dens0=make_gauss_init(pkinit, boxsize=boxsize, ngrid=ngrid, seed=seed, exactpk=exactpk)
-    
-#    print "Calculating particle displacements based on the generated field"
-    fx, fy, fz=get_disp(dens0, boxsize=boxsize, ngrid=ngrid)
-    
-
-#    print "Calculating the final particle positions"
-    x, y, z=get_pos(fx, fy, fz, redshift, boxsize=boxsize, ngrid=ngrid)
-
-#    print "Returning main()"
-    return x, y, z
-    
-    
-
 def make_gauss_init(pkinit, boxsize=100.0, ngrid=30, seed=314159, exactpk=True, smw=0.0):
     
     #mathematical artifact of Fourier transform, possibly incorrect? (ngrid+1)/2)

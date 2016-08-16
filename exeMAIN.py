@@ -37,8 +37,6 @@ else:
 print "Calculating the resulting density grid..."
 dens = exe.run_dens(pk, redshift=args.redshift, growthrate=0.5, boxsize=args.boxsize, ngrid=args.ngrid, nparticles=args.nparticles**3, trand=args.truerand, seed=genseed)
 
-sys.exit("Debug End")
-
 print "Calculating the 1D-averaged correlation function..."
 r, xi = ss.getXi(dens,nrbins=args.ngrid/2, boxsize=args.boxsize, get2d = False, deconvolve_cic = True, exp_smooth = 0.0)
 

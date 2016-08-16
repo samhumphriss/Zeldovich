@@ -6,7 +6,7 @@
 #BSUB -eo ./dump/upd_zeldovich_nb%I.err #Error outputs
 #BSUB -oo ./dump/upd_zeldovich_nb%I.out #Program outputs
 #BSUB -P durham
-#BSUB -R "span[hosts=1]" #Processors per node
+#BSUB -R "span[hosts=2]" #Processors per node
 #BSUB -W 02:00 #Wall clock time
 
 ulimit -c 0
@@ -20,4 +20,4 @@ mkdir "$folderloc/nobao"
 module purge
 module load python/2.7.3
 
-python exeMAIN.py -b 1024 -g 256 -np 512 -r -f "$folderloc/nobao" -p "nowig.txt" --runindex ${LSB_JOBINDEX}
+python exeMAIN.py -b 1024 -g 512 -np 512 -r -f "$folderloc/nobao" -p "nowig.txt" --runindex ${LSB_JOBINDEX}
