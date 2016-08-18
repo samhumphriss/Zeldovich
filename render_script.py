@@ -4,21 +4,9 @@ import numpy as np
 import glob
 import os
 
-folder = "/gpfs/data/rhgk18/results/upd_trial100/bao"
-search = "xi2d_*"
 
-results = glob.glob(os.path.join(folder, search))
+if __name__ == "__main__":
 
-a = 0
-c = 0
-for r in results:
-    a += np.loadtxt(r)
-    c += 1
+    folder = "/gpfs/data/rhgk18/results/b1024_ng256_np256_t300"
 
-xi2d_mean = a/c
-
-rp = np.loadtxt(folder+"/rp.txt")
-pi = np.loadtxt(folder+"/pi.txt")
-#xi2d = np.loadtxt(results[0])
-
-rd.xi2d_slices(rp, pi, xi2d_mean)
+    rd.xi_covariance(folder)

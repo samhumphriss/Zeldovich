@@ -20,8 +20,21 @@ def xi2d_fromfile(folder, seed):
     plt.axes().set_aspect('equal')
     plt.show()
 
-def xi2d_slices(rp, pi, xi2d):
-    
+def xi2d_slices(folder):
+    search = "xi2d_*"
+
+    results = glob.glob(os.path.join(folder, search))
+
+    a = 0
+    c = 0
+    for r in results:
+        a += np.loadtxt(r)
+        c += 1
+
+    xi2d = a/c
+
+    rp = np.loadtxt(folder+"/rp.txt")
+    pi = np.loadtxt(folder+"/pi.txt")
     #Prunes data above rp = 200 Mpc
     rp_ind = np.where(rp<201.0)
     rp = rp[rp_ind]
@@ -51,6 +64,84 @@ def xi2d_slices(rp, pi, xi2d):
     plt.show()
 
 
+def xi_covariance(folder):
+
+    search = "xi_*"
+
+    b_results = glob.glob(os.path.join(folder+"/bao", search))
+    
+    b_test = np.loadtxt(b_results[0])
+    b_arr = np.zeros((len(b_results),len(b_test)))
+    
+    for ind in range(len(b_results)):
+        b_arr[ind] = np.loadtxt(b_results[ind])
+
+    n_results = glob.glob(os.path.join(folder+"/nobao", search))
+    
+    n_test = np.loadtxt(n_results[0])
+    n_arr = np.zeros((len(n_results),len(n_test)))
+    
+    for ind in range(len(n_results)):
+        n_arr[ind] = np.loadtxt(n_results[ind])
+    
+    b_covar = np.cov(b_arr, rowvar=False)
+    n_covar = np.cov(n_arr, rowvar=False)
+    b_corr  = np.corrcoef(b_arr, rowvar=False)
+    n_corr  = np.corrcoef(n_arr, rowvar=False)
+
+    r = np.loadtxt(folder+"/bao/r.txt")
+
+    r_ind = np.where(r<201.0)
+    r = r[r_ind]
+    b_corr = b_corr[0:r_ind[0].max()+1, 0:r_ind[0].max()+1]
+    n_corr = n_corr[0:r_ind[0].max()+1, 0:r_ind[0].max()+1] 
+
+    fig0 = plt.figure()
+    ax1 = fig0.add_subplot(121, aspect='equal')
+    ax2 = fig0.add_subplot(122, aspect='equal')
+
+    ax1.pcolormesh(r,r,b_corr, cmap='magma')
+    ax1.set_title('With BAO')
+    ax1.set_xlabel("$R$")
+    ax1.set_ylabel("$R$")
+
+    ax2.pcolormesh(r,r,n_corr, cmap='magma')
+    ax2.set_title('Without BAO')
+    ax2.set_xlabel("$R$")
+    ax2.set_ylabel("$R$")
+    
+    fig0.suptitle("Comparing the covariance matrices with and without BAO")
+    plt.show()
+
+
+def xi2d_covariance(folder):
+    search = "xi2d_*"
+
+    b_results = glob.glob(os.path.join(folder+"/bao", search))
+    b_test = np.loadtxt(b_results[0])
+
+    trials = len(b_results)
+    dim = len(b_test)
+    b_arr = np.zeros((trials, dim, dim))
+    c = 0
+
+    for r in b_results:
+        b_arr[c] = np.loadtxt(r)
+        c += 1
+
+
+    n_results = glob.glob(os.path.join(folder+"/nobao", search))
+    n_test = np.loadtxt(n_results[0])
+
+    n_arr = np.zeros((len(n_results),len(n_test)))
+    c = 0
+    for r in n_results:
+        n_arr[c] = np.loadtxt(r)
+        c += 1
+
+    covar = np.cov(b_xi2d, n_xi2d)
+    corr  = np.corrcoef(n_xi2d, b_xi2d)
+    return covar
 
 def ximean(r, xiarray):
     subset = np.random.permutation(xiarray)
@@ -236,6 +327,7 @@ def full_data_render(result, densr, densz, pk, slice_depth, boxsize, ngrid):
     ax7.set_ylim([0, bs/2])
     fig1.colorbar(colax)
     plt.show()
+
 
 if "__name__" == "__main__":
     plt.show()
