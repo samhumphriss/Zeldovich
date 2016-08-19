@@ -8,8 +8,6 @@ import os
 import numpy as np
 import spatial_stats as ss
 
-#result = ic.main(args.redshift, pk, boxsize=args.boxsize, ngrid=args.ngrid, trand=args.truerand)
-
 def xi2d_fromfile(folder, seed):
     rp = np.loadtxt(folder+"/rp.txt")
     pi = np.loadtxt(folder+"/pi.txt")
@@ -20,9 +18,7 @@ def xi2d_fromfile(folder, seed):
     plt.axes().set_aspect('equal')
     plt.show()
 
-def xi2d_slices(folder):
-    search = "xi2d_*"
-
+def xi2d_slices(folder, search):
     results = glob.glob(os.path.join(folder, search))
 
     a = 0
@@ -64,9 +60,7 @@ def xi2d_slices(folder):
     plt.show()
 
 
-def xi_covariance(folder):
-
-    search = "xi_*"
+def xi_covariance(folder, search):
 
     b_results = glob.glob(os.path.join(folder+"/bao", search))
     
@@ -91,26 +85,40 @@ def xi_covariance(folder):
 
     r = np.loadtxt(folder+"/bao/r.txt")
 
-    r_ind = np.where(r<201.0)
+    r_ind = np.where(r<200.0)
     r = r[r_ind]
     b_corr = b_corr[0:r_ind[0].max()+1, 0:r_ind[0].max()+1]
     n_corr = n_corr[0:r_ind[0].max()+1, 0:r_ind[0].max()+1] 
+    b_covar= b_covar[0:r_ind[0].max()+1, 0:r_ind[0].max()+1]
+    n_covar= n_covar[0:r_ind[0].max()+1, 0:r_ind[0].max()+1] 
 
     fig0 = plt.figure()
-    ax1 = fig0.add_subplot(121, aspect='equal')
-    ax2 = fig0.add_subplot(122, aspect='equal')
+#    ax1 = fig0.add_subplot(221, aspect='equal')
+#    ax2 = fig0.add_subplot(222, aspect='equal')
+    ax3 = fig0.add_subplot(121, aspect='equal')
+    ax4 = fig0.add_subplot(122, aspect='equal')
 
-    ax1.pcolormesh(r,r,b_corr, cmap='magma')
-    ax1.set_title('With BAO')
-    ax1.set_xlabel("$R$")
-    ax1.set_ylabel("$R$")
+#    col1 = ax1.pcolormesh(r,r,b_corr, cmap='magma')
+#    plt.colorbar(col1, cax=ax1, use_gridspec=True)
+#    ax1.set_title('With BAO Corr')
+#    ax1.set_xlabel("$R$")
+#    ax1.set_ylabel("$R$")
 
-    ax2.pcolormesh(r,r,n_corr, cmap='magma')
-    ax2.set_title('Without BAO')
-    ax2.set_xlabel("$R$")
-    ax2.set_ylabel("$R$")
-    
-    fig0.suptitle("Comparing the covariance matrices with and without BAO")
+#    col2 = ax2.pcolormesh(r,r,n_corr, cmap='magma')
+#    plt.colorbar(col2, cax=ax2, use_gridspec=True)
+#    ax2.set_title('Without BAO Corr')
+#    ax2.set_xlabel("$R$")
+#    ax2.set_ylabel("$R$")
+
+    col3 = ax3.pcolormesh(r,r,b_covar, cmap='magma')
+#    plt.colorbar(col3, cax=ax3, use_gridspec=True)
+    ax3.set_title('With BAO Cov (raw)')
+
+    col4 = ax4.pcolormesh(r,r,r**2*b_covar, cmap='magma')
+#    plt.colorbar(col4, cax=ax4, use_gridspec=True)
+    ax4.set_title('With BAO Cov (scaled by R**2)')
+
+    fig0.suptitle("Comparing the covariance matrices of the 1D averaged correlation function with and without BAO")
     plt.show()
 
 
@@ -143,23 +151,63 @@ def xi2d_covariance(folder):
     corr  = np.corrcoef(n_xi2d, b_xi2d)
     return covar
 
-def ximean(r, xiarray):
-    subset = np.random.permutation(xiarray)
+def xi_mean(folder):
+    search = "xi_*"
+
+    b_results = glob.glob(os.path.join(folder+"/bao", search))
+    
+    b_test = np.loadtxt(b_results[0])
+    b_arr = np.zeros((len(b_results),len(b_test)))
+    
+    for ind in range(len(b_results)):
+        b_arr[ind] = np.loadtxt(b_results[ind])
+
+    subset = np.random.permutation(b_arr)
     subset = subset[0:10]
-
-    fig0 = plt.figure()
-
+    
+    r = np.loadtxt(folder+"/bao/r.txt")
+    
     r_ind = np.where(r<=200.0)
+    r = r[r_ind]
+ 
+    fig0 = plt.figure()
+    ax1 = fig0.add_subplot(121)
 
     for sub in subset:
-        plt.plot(r[r_ind], r[r_ind]**2*sub[r_ind], alpha = 0.5)
+        ax1.plot(r, r**2*sub[r_ind], alpha = 0.7)
          
-    ximean = np.mean(xiarray, axis = 0)
-    xistderr = np.std(xiarray, axis = 0)   
+    xi_mean = np.mean(b_arr, axis = 0)
+    xi_stderr = np.std(b_arr, axis = 0)
 
-    plt.errorbar(r[r_ind], r[r_ind]**2*ximean[r_ind], yerr=r[r_ind]**2*xistderr[r_ind], color='k')
-    plt.xlabel("$R$ /Mpc")
-    plt.ylabel("$R^2\\xi(R)$")
+    ax1.errorbar(r, r**2*xi_mean[r_ind], yerr=r**2*xi_stderr[r_ind], color='k', alpha=0.7)
+    ax1.set_xlabel("$R$ /Mpc")
+    ax1.set_ylabel("$R^2\\xi(R)$")
+
+    ax2 = fig0.add_subplot(122)
+
+    n_results = glob.glob(os.path.join(folder+"/nobao", search))
+    
+    n_test = np.loadtxt(n_results[0])
+    n_arr = np.zeros((len(n_results),len(n_test)))
+    
+    for ind in range(len(n_results)):
+        n_arr[ind] = np.loadtxt(n_results[ind])
+
+    subset = np.random.permutation(n_arr)
+    subset = subset[0:10]
+ 
+    ax1 = fig0.add_subplot(121)
+
+    for sub in subset:
+        ax2.plot(r, r**2*sub[r_ind], alpha = 0.7)
+
+    xi_mean = np.mean(n_arr, axis = 0)
+    xi_stderr = np.std(n_arr, axis = 0)
+
+    ax2.errorbar(r, r**2*xi_mean[r_ind], yerr=r**2*xi_stderr[r_ind], color='k', alpha=0.7)
+    ax2.set_xlabel("$R$ /Mpc")
+    ax2.set_ylabel("$R^2\\xi(R)$")
+
     plt.show()
 
 def pk_render(pk):

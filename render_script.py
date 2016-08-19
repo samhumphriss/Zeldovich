@@ -6,7 +6,6 @@ import os
 
 
 if __name__ == "__main__":
-
-    folder = "/gpfs/data/rhgk18/results/b1024_ng256_np256_t300"
-
-    rd.xi_covariance(folder)
+    folder = "/gpfs/data/rhgk18/results/b1024_ng512_np1024/bao"
+    search = "xi2d_*"
+    rd.xi_covariance(folder, search)
