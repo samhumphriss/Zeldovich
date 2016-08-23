@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from matplotlib.colors import LogNorm
 from itertools import product, combinations
@@ -93,32 +94,37 @@ def xi_covariance(folder, search):
     n_covar= n_covar[0:r_ind[0].max()+1, 0:r_ind[0].max()+1] 
 
     fig0 = plt.figure()
-#    ax1 = fig0.add_subplot(221, aspect='equal')
-#    ax2 = fig0.add_subplot(222, aspect='equal')
-    ax3 = fig0.add_subplot(121, aspect='equal')
-    ax4 = fig0.add_subplot(122, aspect='equal')
 
-#    col1 = ax1.pcolormesh(r,r,b_corr, cmap='magma')
-#    plt.colorbar(col1, cax=ax1, use_gridspec=True)
-#    ax1.set_title('With BAO Corr')
-#    ax1.set_xlabel("$R$")
-#    ax1.set_ylabel("$R$")
+    ax1 = fig0.add_subplot(121, aspect='equal')
+    divider = make_axes_locatable(ax1)
+    cax = divider.append_axes("right", size="5%", pad=0.05)
 
-#    col2 = ax2.pcolormesh(r,r,n_corr, cmap='magma')
-#    plt.colorbar(col2, cax=ax2, use_gridspec=True)
-#    ax2.set_title('Without BAO Corr')
-#    ax2.set_xlabel("$R$")
-#    ax2.set_ylabel("$R$")
+    ax1.axhline(y=107, xmin=0, xmax=200, c='k', alpha=0.7)
+    ax1.axvline(x=107, ymin=0, ymax=200, c='k', alpha=0.7)
 
-    col3 = ax3.pcolormesh(r,r,b_covar, cmap='magma')
-#    plt.colorbar(col3, cax=ax3, use_gridspec=True)
-    ax3.set_title('With BAO Cov (raw)')
+    col1 = ax1.pcolormesh(r,r,b_corr, vmin=b_corr.min(), vmax=b_corr.max(),  cmap='rainbow')
+    plt.colorbar(col1, cax = cax)
+    ax1.set_title('With BAO')
+    ax1.set_xlabel("$R$")
+    ax1.set_ylabel("$R$")
+    ax1.text(20, 109, 'BAO', color='k', alpha=0.7)
 
-    col4 = ax4.pcolormesh(r,r,r**2*b_covar, cmap='magma')
-#    plt.colorbar(col4, cax=ax4, use_gridspec=True)
-    ax4.set_title('With BAO Cov (scaled by R**2)')
+    ax2 = fig0.add_subplot(122, aspect='equal')
+    divider = make_axes_locatable(ax2)
+    cax = divider.append_axes("right", size="5%", pad=0.05)
 
-    fig0.suptitle("Comparing the covariance matrices of the 1D averaged correlation function with and without BAO")
+    ax2.axhline(y=107, xmin=0, xmax=200,c= 'k', alpha=0.7)
+    ax2.axvline(x=107, ymin=0, ymax=200, c='k', alpha=0.7)
+
+    col2 = ax2.pcolormesh(r,r,n_corr, vmin=b_corr.min(), vmax=b_corr.max(), cmap='rainbow')
+    plt.colorbar(col2, cax = cax)
+    ax2.set_title('Without BAO')
+    ax2.set_xlabel("$R$")
+    ax2.set_ylabel("$R$")
+    ax2.text(20, 109, 'BAO', color='k', alpha=0.7)
+
+
+    fig0.suptitle("Comparing the Pearson matrices of the 1D averaged correlation function with and without BAO")
     plt.show()
 
 
@@ -151,6 +157,56 @@ def xi2d_covariance(folder):
     corr  = np.corrcoef(n_xi2d, b_xi2d)
     return covar
 
+def xi_resid(folder, search):
+    fig0 = plt.figure(0)
+
+    frame1 = fig0.add_axes((.1,.3,.8,.6))
+    frame2 = fig0.add_axes((.1,.1,.8,.2))
+
+    #Plot
+    results = glob.glob(os.path.join(folder+"/nobao", search))
+    r = np.loadtxt(folder+"/nobao/r.txt")
+    test = np.loadtxt(results[0])
+   
+    r_ind = np.where(r<=200.0)
+    r = r[r_ind]
+
+    arr = np.zeros((len(results),len(test)))
+    
+    for ind in range(len(results)):
+        arr[ind] = np.loadtxt(results[ind])
+
+    subset = np.random.permutation(arr)
+    subset = subset[0:20]
+
+    arr_mean = np.mean(arr, axis=0)
+    frame1.plot(r, r**2*arr_mean[r_ind], linewidth = 2.5, color='k')
+
+    for sub in subset:
+        frame1.plot(r, r**2*sub[r_ind], alpha=0.4)
+    
+    frame1.set_xticklabels([])
+    frame1.set_yticks(range(-10, 60, 10))
+    frame1.set_ylabel("$\\xi (R)$", rotation = 90, size=16)
+    frame1.set_title("Resultant Correlation Function (300 trials): Angular Average")
+    frame1.axvline(x=107, ymin=-20,ymax=70, color='k')
+    frame1.text(107, 45, "BAO", rotation=270, alpha=0.7, color='k')
+    frame1.grid()
+
+    std = np.std(arr, axis = 0)
+    std = std[r_ind]
+    nstd = -std
+    frame2.plot(r, r**2*std, 'r--')
+    frame2.plot(r, r**2*nstd, 'r--')
+    frame2.axhline(y=0, xmin=0, xmax=200, color='k', alpha=0.5, lw = 1)
+    frame2.set_yticks([-2,-1,0,1,2])
+    frame2.set_xlabel("$R /Mpc$", size=16)
+    frame2.set_ylabel("Standard Deviation", rotation = 90, size=13)
+    frame2.axvline(x=107, ymin=-4, ymax=4, color='k')
+    frame2.grid()
+
+    plt.show()
+
 def xi_mean(folder):
     search = "xi_*"
 
@@ -163,7 +219,7 @@ def xi_mean(folder):
         b_arr[ind] = np.loadtxt(b_results[ind])
 
     subset = np.random.permutation(b_arr)
-    subset = subset[0:10]
+    subset = subset[0:50]
     
     r = np.loadtxt(folder+"/bao/r.txt")
     
