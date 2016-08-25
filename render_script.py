@@ -221,8 +221,8 @@ def meeting_plot_xidiff_unscale(folder):
     plt.xlabel("$R [Mpc/h]$", size = 16)
     plt.ylabel("$\\Delta \\xi (R)$", size = 16)
     plt.title("$\\langle\\xi_{bao}-\\xi_{no bao}\\rangle$")
-    plt.legend([rsdArtist, realArtist, transArtist, losArtist, baoArtist, nbaoArtist], ["Redshift Space", "Real Space", "Redshift Space Transverse", "Redshift Space Line of Sight"], prop={'size':10}, loc=2)
-    plt.axis([0,150,-0.01,0.01])
+    plt.legend([rsdArtist, realArtist, transArtist, losArtist, baoArtist, nbaoArtist], ["Redshift Space", "Real Space", "Redshift Space Transverse", "Redshift Space Line of Sight"], prop={'size':10}, loc=4)
+    plt.axis([20,180,-0.002,0.003])
     plt.show()
 
 #--------------------------------------------------------------------------------
@@ -317,8 +317,8 @@ def meeting_plot_xidiff(folder):
     plt.xlabel("$R [Mpc/h]$", size = 16)
     plt.ylabel("$R^2\\Delta\\xi (R)$", size = 16)
     plt.title("$\\langle\\xi_{bao}-\\xi_{no bao}\\rangle$")
-    plt.legend([rsdArtist, realArtist, transArtist, losArtist, baoArtist, nbaoArtist], ["Redshift Space", "Real Space", "Redshift Space Transverse", "Redshift Space Line of Sight"], prop={'size':10})
-#    plt.axis([0,250,-60,80])
+    plt.legend([rsdArtist, realArtist, transArtist, losArtist, baoArtist, nbaoArtist], ["Redshift Space", "Real Space", "Redshift Space Transverse", "Redshift Space Line of Sight"], prop={'size':10}, loc =3)
+    plt.axis([20,180,-20,20])
     plt.show()
 
 
@@ -430,4 +430,4 @@ if __name__ == "__main__":
 
     folder = "/gpfs/data/rhgk18/results/b1024_ng512_np1024"
 
-    meeting_plot_xidiff(folder)
+    meeting_plot_xidiff_unscale(folder)
