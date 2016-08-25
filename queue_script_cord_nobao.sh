@@ -1,8 +1,8 @@
 #!/bin/bash -l
 #BSUB -L /bin/bash
 #BSUB -q cordelia
-#BSUB -n 3 #Number of processors
-#BSUB -J zeldovich_1024_512_1024_nb[1-300] #Job name
+#BSUB -n 4 #Number of processors
+#BSUB -J zeldovich_1024_512_1024_nb[1-1000] #Job name
 #BSUB -eo ./dump/b1024_ng512_np1024/zeldovich_nb%I.err #Error outputs
 #BSUB -oo ./dump/b1024_ng512_np1024/zeldovich_nb%I.out #Program outputs
 #BSUB -P durham
@@ -25,4 +25,4 @@ ulimit -c 0
 module purge
 module load python/2.7.3
 
-python exeMAIN.py -b $bs -g $ng -np $np -r -f "$folderloc/nobao" -p "nowig.txt" --runindex ${LSB_JOBINDEX} -s 350
+python exeMAIN.py -b $bs -g $ng -np $np -r -f "$folderloc/nobao" -p "nowig.txt" --runindex ${LSB_JOBINDEX} -s 0 -gr 0.5

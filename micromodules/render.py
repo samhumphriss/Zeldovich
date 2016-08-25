@@ -207,6 +207,90 @@ def xi_resid(folder, search):
 
     plt.show()
 
+
+
+def import_data(folder, search, cutoff):
+
+    results = glob.glob(os.path.join(folder, search))
+    test = np.loadtxt(results[0])
+
+    if search == "xi_*":
+        r = np.loadtxt(folder+"/r.txt")
+    
+        r_ind = np.where(r <= cutoff)
+        r = r[r_ind]
+
+        arr = np.zeros((len(results),len(test)))
+    
+        for ind in range(len(results)):
+            arr[ind] = np.loadtxt(results[ind])
+            
+        arr = arr[:, r_ind[0]]
+        return r, arr
+    
+    if search == "xi2d_*":
+        rp = np.loadtxt(folder+"/rp.txt")
+        pi = np.loadtxt(folder+"/pi.txt")
+   
+        rp_ind = np.where(rp<=cutoff)
+        rp = rp[rp_ind]
+        pi = pi[rp_ind]
+
+        arr = np.zeros((len(results), len(test), len(test)))
+    
+        for ind in range(len(results)):
+            arr[ind] = np.loadtxt(results[ind])
+
+        rp = rp[rp_ind]
+        pi = pi[rp_ind]
+        arr = arr[0:rp_ind[0].max()+1, 0:rp_ind[0].max()+1]
+        return rp, pi, arr
+    
+    return -42
+
+def meeting_plot(folder):
+    print "meeting_plot()"
+    plt.figure()
+    
+    bao_fol  = folder+"/bao"
+    nbao_fol = folder+"/nobao"
+
+    xi_search   = "xi_*"
+    xi2d_search = "xi2d_*"
+
+    print "importing xi..."
+    r, xi_arr_bao  = import_data( bao_fol, xi_search, 200)
+    r, xi_arr_nbao = import_data(nbao_fol, xi_search, 200)
+
+    
+#    print "importing xi2d..."
+#    rp, pi, xi2d_arr_bao  = import_data( bao_fol, xi2d_search, 200)
+#    rp, pi, xi2d_arr_nbao = import_data(nbao_fol, xi2d_search, 200)
+
+    #Angular Average (/w RSD)
+    print "calculating angular average /w RSD..."
+    m_xi_bao  = np.mean(xi_arr_bao, axis = 0)
+    m_xi_nbao = np.mean(xi_arr_nbao, axis = 0)
+#    print "shape m_xi, ", str(np.shape(m_xi_bao))
+
+    print "plotting..."
+    plt.plot(r, r**2*m_xi_bao, label='m_xi_rsd_bao')
+    plt.plot(r, r**2*m_xi_nbao, label='m_xi_rsd_nbao')
+
+    #Angular Average (w/o RSD)
+
+    #Transverse
+
+    #Line of Sight
+    
+    plt.legend(['m_xi_rsd_bao', 'm_xi_rsd_nbao'], ['Mean $\\xi (R)$, RSD, BAO','Mean $\\xi (R)$, RSD, No BAO'])
+    plt.show()
+
+
+
+
+
+
 def xi_mean(folder):
     search = "xi_*"
 

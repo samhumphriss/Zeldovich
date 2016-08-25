@@ -19,6 +19,7 @@ parser.add_argument("-f", "--folder", type=str, default = "/BX_GX_ZX_000", help=
 parser.add_argument("--runindex", type=int, default = -1, help='Should be set to ${LSB_JOBINDEX} if used.')
 parser.add_argument("-np", "--nparticles", type=int, default = 128, help='Gives the total number of particles within the volume.')
 parser.add_argument("-s", "--seedstart", type=int, default=0, help='Set the index from which to begin in the seedbank.')
+parser.add_argument("-gr", "--growthrate", type=float, default=0.5, help='Set the relative intensity of the RSD. Set 0 for no RSD.')
 args = parser.parse_args()
 
 sv_folder = args.folder
@@ -36,7 +37,7 @@ else:
     print "\nGenerator seed = ", genseed, "\n"
 
 print "Calculating the resulting density grid..."
-dens = exe.run_dens(pk, redshift=args.redshift, growthrate=0.5, boxsize=args.boxsize, ngrid=args.ngrid, nparticles=args.nparticles**3, trand=args.truerand, seed=genseed)
+dens = exe.run_dens(pk, redshift=args.redshift, growthrate=args.growthrate, boxsize=args.boxsize, ngrid=args.ngrid, nparticles=args.nparticles**3, trand=args.truerand, seed=genseed)
 
 print "Calculating the 1D-averaged correlation function..."
 r, xi = ss.getXi(dens,nrbins=args.ngrid/2, boxsize=args.boxsize, get2d = False, deconvolve_cic = False, exp_smooth = 0.0)
