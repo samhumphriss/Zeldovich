@@ -222,7 +222,7 @@ def meeting_plot_xidiff_unscale(folder):
     plt.ylabel("$\\Delta \\xi (R)$", size = 24)
     plt.title("$\\langle\\xi_{bao}-\\xi_{no bao}\\rangle$", size=24)
     plt.legend([rsdArtist, realArtist, transArtist, losArtist, baoArtist, nbaoArtist], ["Redshift Space", "Real Space", "Redshift Space Transverse", "Redshift Space Line of Sight"], prop={'size':18}, loc=4)
-    plt.axis([20,180,-0.002,0.003])
+    plt.axis([20,180,-0.002,0.002])
     plt.show()
 
 #--------------------------------------------------------------------------------
@@ -430,4 +430,4 @@ if __name__ == "__main__":
 
     folder = "/gpfs/data/rhgk18/results/b1024_ng512_np1024"
 
-    meeting_plot(folder)
+    meeting_plot_xidiff_unscale(folder)
