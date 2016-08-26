@@ -123,11 +123,11 @@ def meeting_plot(folder):
     baoArtist  = plt.Line2D((0,1),(0,0), color='k', linestyle='-')
     nbaoArtist = plt.Line2D((0,1),(0,0), color='k', linestyle='--')
 
-    plt.xlabel("$R [Mpc/h]$", size = 16)
-    plt.ylabel("$\\xi (R)$", size = 16)
-    plt.title("Correllation function for Real and Redshift space, with and without the BAO")
-    plt.legend([rsdArtist, realArtist, transArtist, losArtist, baoArtist, nbaoArtist], ["Redshift Space", "Real Space", "Redshift Space Transverse", "Redshift Space Line of Sight", "With BAO", "Without BAO"], prop={'size':13})
-    plt.axis([30,200,-0.007,0.01])
+    plt.xlabel("$R [Mpc/h]$", size = 24)
+    plt.ylabel("$\\xi (R)$", size = 24)
+    plt.title("Correllation function for Real and Redshift space, with and without the BAO", size=24)
+    plt.legend([rsdArtist, realArtist, transArtist, losArtist, baoArtist, nbaoArtist], ["Redshift Space", "Real Space", "Redshift Space Transverse", "Redshift Space Line of Sight", "With BAO", "Without BAO"], prop={'size':18})
+    plt.axis([20,180,-0.007,0.01])
     plt.show()
 
 #--------------------------------------------------------------------------------
@@ -418,11 +418,11 @@ def meeting_plot_scale(folder):
     baoArtist  = plt.Line2D((0,1),(0,0), color='k', linestyle='-')
     nbaoArtist = plt.Line2D((0,1),(0,0), color='k', linestyle='--')
 
-    plt.xlabel("$R [Mpc/h]$", size = 16)
-    plt.ylabel("$R^2\\xi (R)$", size = 16)
-    plt.title("Scaled Correllation function for Real and Redshift space, with and without the BAO")
-    plt.legend([rsdArtist, realArtist, transArtist, losArtist, baoArtist, nbaoArtist], ["Redshift Space", "Real Space", "Redshift Space Transverse", "Redshift Space Line of Sight", "With BAO", "Without BAO"], prop={'size':10})
-    plt.axis([30,200,-60,80])
+    plt.xlabel("$R [Mpc/h]$", size = 24)
+    plt.ylabel("$R^2\\xi (R)$", size = 24)
+    plt.title("Scaled Correllation function for Real and Redshift space, with and without the BAO", size=24)
+    plt.legend([rsdArtist, realArtist, transArtist, losArtist, baoArtist, nbaoArtist], ["Redshift Space", "Real Space", "Redshift Space Transverse", "Redshift Space Line of Sight", "With BAO", "Without BAO"], prop={'size':18})
+    plt.axis([20,180,-60,80])
     plt.show()
 
 
@@ -430,4 +430,4 @@ if __name__ == "__main__":
 
     folder = "/gpfs/data/rhgk18/results/b1024_ng512_np1024"
 
-    meeting_plot_xidiff(folder)
+    meeting_plot(folder)
