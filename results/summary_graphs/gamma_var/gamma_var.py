@@ -1,5 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
+plt.style.use('nuala')
+plt.rcParams['xtick.labelsize'] = 22
+plt.rcParams['ytick.labelsize'] = 22
 import glob
 
 def import_data():
@@ -126,21 +129,19 @@ def render_gamma_variance(pi, g0925, g0806, g0704, g0613, g0532, g0459, g0392):
     f5 = plt.fill_between(pi, g5_m-g5_err, g5_m+g5_err, color=carr[4], alpha=0.2)
     f6 = plt.fill_between(pi, g6_m-g6_err, g6_m+g6_err, color=carr[5], alpha=0.2)
     f7 = plt.fill_between(pi, g7_m-g7_err, g7_m+g7_err, color=carr[6], alpha=0.2)
-    plt.grid()
     
     f = [0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]
     g = np.array([0.925, 0.806, 0.704, 0.613, 0.532, 0.459, 0.392])
     plt.axhline(y=0, color='k')
-    plt.xlabel("$R [Mpc]$",size=24)
-    plt.ylabel("$\\xi(R)$",size=24)
-    plt.axis([20,180,-0.015, 0.01])
+    plt.xlabel("$r [Mpc]$",size=24)
+    plt.ylabel("$\\xi(r)$",size=24)
+    plt.axis([20,200,-0.013, 0.007])
     sm = plt.cm.ScalarMappable(cmap='rainbow', norm =plt.Normalize(vmin=0.3, vmax=0.6))
     sm._A = []
     cb = plt.colorbar(sm)
-    cb.set_label(r'$\gamma$', rotation=270, labelpad=30, size = 24)
+    cb.set_label(r'$\gamma$', rotation=270, labelpad=30, size = 30)
     cb.set_ticks(f)
     cb.ax.set_yticklabels(['%.2f'%g[i] for i in np.arange(g.size)])
-#    plt.legend()
     plt.show()
         
 

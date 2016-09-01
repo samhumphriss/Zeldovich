@@ -1,4 +1,8 @@
 import matplotlib.pyplot as plt
+plt.style.use('nuala')
+plt.rcParams['xtick.labelsize'] = 22
+plt.rcParams['ytick.labelsize'] = 22
+
 import numpy as np
 import zeldovich_init as zi
 import cic_dens_wrapper as cdw
@@ -27,9 +31,9 @@ def render_real_pos(x, y, z):
     
     plt.figure()
     plt.axes().set_aspect('equal')
-    plt.plot(x,z, 'bo', markersize = 1)
-    plt.xlabel("X [MPc]", size=24)
-    plt.ylabel("Z [MPc]", size=24)
+    plt.plot(z,x, 'bo', markersize = 1)
+    plt.xlabel("X [$MPc/h$]", size=24)
+    plt.ylabel("Z [$MPc/h$]", size=24)
     plt.xlim([0,100])
     plt.ylim([0,100])
     plt.show()
@@ -46,9 +50,9 @@ def render_rs_pos(x, y, z):
     
     plt.figure()
     plt.axes().set_aspect('equal')
-    plt.plot(x,z, 'bo', markersize = 1)
-    plt.xlabel("X [MPc]", size=24)
-    plt.ylabel("Z [MPc]", size=24)
+    plt.plot(z,x, 'bo', markersize = 1)
+    plt.xlabel("X [$MPc/h$]", size=24)
+    plt.ylabel("Z [$MPc/h$]", size=24)
     plt.xlim([0,100])
     plt.ylim([0,100])
     plt.show()
@@ -69,13 +73,13 @@ def render_rs_dens(densrs):
     z_min, z_max = densitycutoff, np.max(dp)
 
     fig0 = plt.figure()
-    colax2 = plt.pcolormesh(x, z, dp, cmap='magma', vmin=z_min, vmax=z_max)
+    colax2 = plt.pcolormesh(z, x, dp, cmap='magma', vmin=z_min, vmax=z_max)
     cbar2 = fig0.colorbar(colax2)
     cbar2.set_ticks([densitycutoff,0,z_max])
-    cbar2.set_ticklabels([r"$\rho$ = -$\infty$", r"$\rho$ = 0", r"$\rho$ = "+ str(np.around(z_max, 3))])
-    cbar2.ax.tick_params(labelsize=18)
-    plt.xlabel("$X [Mpc]$", size=24)
-    plt.ylabel("$Z [Mpc]$", size=24)
+    cbar2.set_ticklabels([r"$\delta$ = -$\infty$", r"$\delta$ = 0", r"$\delta$ = "+ str(np.around(z_max, 3))])
+    cbar2.ax.tick_params(labelsize=24)
+    plt.xlabel("$X [$Mpc/h$]$", size=24)
+    plt.ylabel("$Z [$Mpc/h$]$", size=24)
     plt.show()
 
 def render_real_dens(densreal):
@@ -94,19 +98,22 @@ def render_real_dens(densreal):
     z_min, z_max = densitycutoff, np.max(dp)
 
     fig0 = plt.figure()
-    colax2 = plt.pcolormesh(x, z, dp, cmap='magma', vmin=z_min, vmax=z_max)
+    colax2 = plt.pcolormesh(z, x, dp, cmap='magma', vmin=z_min, vmax=z_max)
     cbar2 = fig0.colorbar(colax2)
     cbar2.set_ticks([densitycutoff,0,z_max])
-    cbar2.set_ticklabels([r"$\rho$ = -$\infty$", r"$\rho$ = 0", r"$\rho$ = "+ str(np.around(z_max, 3))])
-    cbar2.ax.tick_params(labelsize=18)
-    plt.xlabel("$X [Mpc]$", size=24)
-    plt.ylabel("$Z [Mpc]$", size=24)
+    cbar2.set_ticklabels([r"$\delta$ = -$\infty$", r"$\delta$ = 0", r"$\delta$ = "+ str(np.around(z_max, 3))])
+    cbar2.ax.tick_params(labelsize=24)
+    plt.xlabel("$X [$Mpc/h$]$", size=24)
+    plt.ylabel("$Z [$Mpc/h$]$", size=24)
     plt.show()
 
 
 if __name__ == "__main__":
     x, xr, y, z, densrs, densreal = zeldovich_data()
-    render_dotpos_dens(x, xr, y, z, densr, densreal)
+    render_real_pos(x, y, z)
+    render_real_dens(densreal)
+    render_rs_pos(xr, y, z)
+    render_rs_dens(densrs)
 
 
 

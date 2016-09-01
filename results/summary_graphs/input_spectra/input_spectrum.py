@@ -1,4 +1,8 @@
 import matplotlib.pyplot as plt
+plt.style.use('nuala')
+plt.rcParams['xtick.labelsize'] = 18
+plt.rcParams['ytick.labelsize'] = 18
+
 import numpy as np
 from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
 from mpl_toolkits.axes_grid1.inset_locator import mark_inset
@@ -21,9 +25,9 @@ def render_input_spectrum():
 
     ax.loglog(pkbao[:,0]  ,pkbao[:,1]  , color='r', label='With BAO')
     ax.loglog(pknbao[:,0] ,pknbao[:,1] , color='b', label='Without BAO')
-    ax.set_xlabel("Wavenumber, $k$", size=24)
-    ax.set_ylabel("Power, $P(k)$", size=24)
-    ax.legend(prop={'size':20})
+    ax.set_xlabel("Wavenumber, $k$ [$h/Mpc$]", size=28)
+    ax.set_ylabel("Power, $P(k)$ [$(Mpc/h)^3$]", size=28)
+    ax.legend(prop={'size':28})
     
     axins = zoomed_inset_axes(ax, 5, loc=3)
     axins.loglog(pkbao[:,0]  ,pkbao[:,1]  , color='r', label='iWith BAO')

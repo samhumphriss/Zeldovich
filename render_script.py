@@ -11,7 +11,7 @@ def import_data(folder, search, cutoff):
     results = glob.glob(os.path.join(folder, search))
     test = np.loadtxt(results[0])
 
-    if search == "xi_*":
+    if search == "cf_1d*" or search == "xi_*":
         r = np.loadtxt(folder+"/r.txt")
         arr = np.zeros((len(results),len(test)))
     
@@ -20,15 +20,15 @@ def import_data(folder, search, cutoff):
 
         return r, arr
     
-    if search == "xi2d_*":
-        rp = np.loadtxt(folder+"/rp.txt")
-        pi = np.loadtxt(folder+"/pi.txt")
+    if search == "cf_2d*" or search == "xi2d_*":
+#        rp = np.loadtxt(folder+"/rp.txt")
+#        pi = np.loadtxt(folder+"/pi.txt")
         arr = np.zeros((len(results), len(test), len(test)))
     
         for ind in range(len(results)):
             arr[ind] = np.loadtxt(results[ind])
 
-        return rp, pi, arr
+        return arr
     
     return -42
 
@@ -426,8 +426,69 @@ def meeting_plot_scale(folder):
     plt.show()
 
 
+
+def nuala_growthrate(folder):
+    print "nuala_growthrate()"
+    plt.figure()
+    
+    folder03 = "/gpfs/data/nmccull/zeldovich_out/run_f0.3"
+    folder04 = "/gpfs/data/nmccull/zeldovich_out/run_f0.4"
+    folder05 = "/gpfs/data/nmccull/zeldovich_out/run_f0.5"
+    folder06 = "/gpfs/data/nmccull/zeldovich_out/run_f0.6"
+
+    bao_fol  = folder+"/with_bao"
+    nbao_fol = folder+"/no_bao"
+
+    xi2d_search = "cf_2d*"
+
+    if True:
+        print "importing xi2d..."
+        temp_ = np.loadtxt(folder03+"/rp_pi.txt")
+        rp = temp_[:,0]
+        pi = temp_[:,1]
+
+        xi2d_03     = import_data(folder03+"/with_bao", xi2d_search, 200)
+        xi2d_03_nb  = import_data(folder03+"/no_bao", xi2d_search, 200)
+
+        xi2d_04     = import_data(folder04+"/with_bao", xi2d_search, 200)
+        xi2d_04_nb  = import_data(folder04+"/no_bao", xi2d_search, 200)
+
+        xi2d_05     = import_data(folder03+"/with_bao", xi2d_search, 200)
+        xi2d_05_nb  = import_data(folder03+"/no_bao", xi2d_search, 200)
+
+        print "calculating the mean 2D correlation function..."
+        m_xi2d_bao_rsd  = np.mean(xi2d_rsd_bao , axis = 0)
+        xi2d_bao_rsd_err= np.std(xi2d_rsd_bao, axis = 0)/np.sqrt(len(xi2d_rsd_bao))
+        m_xi2d_nbao_rsd = np.mean(xi2d_rsd_nbao, axis = 0)
+        xi2d_nbao_rsd_err= np.std(xi2d_rsd_bao, axis = 0)/np.sqrt(len(xi2d_rsd_nbao))   
+
+        #Line of Sight
+        p7 = plt.plot(pi, pi**2*m_xi2d_bao_rsd[0,:],label="XI2D Transverse, RSD, BAO",color='c',linestyle='-')
+        p7e = plt.fill_between(pi, pi**2*(m_xi2d_bao_rsd[0,:]-xi2d_bao_rsd_err[0,:]), pi**2*(m_xi2d_bao_rsd[0,:]+xi2d_bao_rsd_err[0,:]), alpha=0.2, color='c')
+
+        p8 = plt.plot(pi, pi**2*m_xi2d_nbao_rsd[0,:],label="XI2D Transverse, RSD, No BAO",color='c',linestyle='--')
+        p8e = plt.fill_between(pi, pi**2*(m_xi2d_nbao_rsd[0,:]-xi2d_nbao_rsd_err[0,:]), pi**2*(m_xi2d_nbao_rsd[0,:]+xi2d_nbao_rsd_err[0,:]), alpha=0.2, color='c')
+
+    rsdArtist  = mpatches.Patch(color='red')
+    realArtist = mpatches.Patch(color='blue')
+    transArtist= mpatches.Patch(color='cyan')
+    losArtist  = mpatches.Patch(color='green')
+    baoArtist  = plt.Line2D((0,1),(0,0), color='k', linestyle='-')
+    nbaoArtist = plt.Line2D((0,1),(0,0), color='k', linestyle='--')
+
+    plt.xlabel("$R [Mpc/h]$", size = 24)
+    plt.ylabel("$R^2\\xi (R)$", size = 24)
+    plt.title("Scaled Correllation function for Real and Redshift space, with and without the BAO", size=24)
+    plt.legend([rsdArtist, realArtist, transArtist, losArtist, baoArtist, nbaoArtist], ["Redshift Space", "Real Space", "Redshift Space Transverse", "Redshift Space Line of Sight", "With BAO", "Without BAO"], prop={'size':18})
+    plt.axis([20,180,-60,80])
+    plt.show()
+
+
+
+
+    
+
+
 if __name__ == "__main__":
 
-    folder = "/gpfs/data/rhgk18/results/b1024_ng512_np1024"
-
-    meeting_plot_xidiff_unscale(folder)
+    nuala_growthrate()

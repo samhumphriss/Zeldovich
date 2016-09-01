@@ -1,5 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
+plt.style.use('nuala')
+plt.rcParams['xtick.labelsize'] = 22
+plt.rcParams['ytick.labelsize'] = 22
+
 import glob
 
 def import_data():
@@ -70,12 +74,14 @@ def render_correlation_spread(rp, pi, m_arr, _2d_arr):
     transArtist = plt.Line2D((0,1),(0,0), color='b', lw=2, ls='-')
     losArtist   = plt.Line2D((0,1),(0,0), color='g', lw=2, ls='-')
 
-    plt.xlabel("$R [Mpc/h]$", size =24)
-    plt.ylabel("$\\xi(R)$", size = 24)
-    plt.legend([monoArtist, transArtist, losArtist],["Monopole", "Transverse", "Line of Sight"], prop={'size':20})
+    plt.axhline(y=0, color='k', lw=2)
+    plt.xlabel("$r [Mpc/h]$", size =24)
+    plt.ylabel("$\\xi(r)$", size = 28)
+    plt.legend([monoArtist, transArtist, losArtist],["Redshift-space Monopole", "Transverse", "Line of Sight"], prop={'size':24})
     plt.axis([20, 180, -0.01, 0.02])
     plt.show()
     
     
 if __name__ == "__main__":
-    mono_arr, _2d_arr = import_data()
+    rp, pi, mono_arr, _2d_arr = import_data()
+    render_correlation_spread(rp, pi, mono_arr, _2d_arr)
